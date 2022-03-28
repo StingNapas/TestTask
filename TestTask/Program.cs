@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 
 namespace TestTask
 {
@@ -49,25 +50,47 @@ namespace TestTask
             animal.Birthday = dateBirthday;
             animal.Name = "Andrew";
             animal.Sex = Sex.Male;
-            animal.SayHellow();
+            //animal.SayHellow();
             var elephant = new Elephant();
+            elephant.Birthday = dateBirthday.AddYears(10);
             elephant.Name = "Alex";
-            elephant.SayHellow();
+            //elephant.SayHellow();
             var zebra = new Zebra();
+            zebra.Birthday = dateBirthday.AddYears(20);
             zebra.Name = "Nastya";
-            zebra.SayHellow();
+            //zebra.SayHellow();
             var giraffe = new Giraffe();
+            giraffe.Birthday = dateBirthday.AddYears(27);
             giraffe.Name = "Gena";
-            giraffe.SayHellow();
+            //giraffe.SayHellow();
 
             List <Animal> animalList = new List<Animal>()
             {
-                new Animal(),
-                new Zebra(),
-                new Giraffe(),
-                new Elephant()
+                animal,
+                elephant,
+                zebra,
+                giraffe
             };
+            Console.WriteLine("Полный список животных");
             animalList.ListShowAllElem();
+            var linqTask1 = AgeLess2_1(animalList);
+            Console.WriteLine("Возраст меньше 2 методом расширений");
+            linqTask1.ListShowAllElem();
+            linqTask1 = AgeLess2_2(animalList);
+            Console.WriteLine("Возраст меньше 2 запросом");
+            linqTask1.ListShowAllElem();
+
+            var linqTask2 = FilterByZebra_1(animalList);
+            Console.WriteLine("Только Зебры методом расширений");
+            linqTask2.ListShowAllElem();
+            linqTask2 = FilterByZebra_2(animalList);
+            Console.WriteLine("Только Зебры запросом");
+            linqTask2.ListShowAllElem();
+
+            var linqTask3 = SumAge_1(animalList);
+            Console.WriteLine($"Сумма возрастов методом расширений = {linqTask3}");
+            linqTask3 = SumAge_2(animalList);
+            Console.WriteLine($"Сумма возрастов запросом = {linqTask3}");
             #endregion
         }
 
@@ -145,5 +168,40 @@ namespace TestTask
             }
         }
 
+        // -------------------- LINQ -----------------------------
+        public static List<Animal> AgeLess2_1(List<Animal> inputList)
+        {
+            return inputList.Where(a => a.Age < 2).ToList();
+        }
+        public static List<Animal> AgeLess2_2(List<Animal> inputList)
+        {
+            var result = from item in inputList
+                         where item.Age < 2
+                         select item;
+            return result.ToList();
+        }
+
+        public static List<Animal> FilterByZebra_1(List<Animal> inputList)
+        {
+            return inputList.Where(a => a.GetType().Equals(typeof(Zebra))).ToList();
+        }
+        public static List<Animal> FilterByZebra_2(List<Animal> inputList)
+        {
+            var result = from item in inputList
+                         where item.GetType().Equals(typeof(Zebra))
+                         select item;
+            return result.ToList();
+        }
+
+        public static int SumAge_1(List<Animal> inputList)
+        {
+            return inputList.Sum(a => a.Age);
+        }
+        public static int SumAge_2(List<Animal> inputList)
+        {
+            var result = from item in inputList
+                         select item.Age;
+            return result.Sum();
+        }
     }
 }
