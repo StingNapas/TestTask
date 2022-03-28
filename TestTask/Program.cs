@@ -1,9 +1,20 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 
 namespace TestTask
 {
-    class Program
+    public static class ListExtension
+    {
+        public static void ListShowAllElem(this List<Program.Animal> currentList)
+        {
+            foreach(var item in currentList)
+            {
+                Console.WriteLine(item.GetType().Name);
+            }
+        }
+    }
+    public class Program
     {
         static void Main(string[] args)
         {
@@ -38,10 +49,25 @@ namespace TestTask
             animal.Birthday = dateBirthday;
             animal.Name = "Andrew";
             animal.Sex = Sex.Male;
-            animal.ShowProp();
-            animal++;
-            Console.WriteLine("После инкремента");
-            animal.ShowProp();
+            animal.SayHellow();
+            var elephant = new Elephant();
+            elephant.Name = "Alex";
+            elephant.SayHellow();
+            var zebra = new Zebra();
+            zebra.Name = "Nastya";
+            zebra.SayHellow();
+            var giraffe = new Giraffe();
+            giraffe.Name = "Gena";
+            giraffe.SayHellow();
+
+            List <Animal> animalList = new List<Animal>()
+            {
+                new Animal(),
+                new Zebra(),
+                new Giraffe(),
+                new Elephant()
+            };
+            animalList.ListShowAllElem();
             #endregion
         }
 
@@ -65,20 +91,14 @@ namespace TestTask
             return (square, cube);
         }
 
-        enum Sex
+        public enum Sex
         {
             Male,
             Female
         }
 
-        class Animal
+        public class Animal
         {
-            //public Animal(DateTime birthday, string name, Sex sexVar)
-            //{
-            //    this.Birthday = birthday;
-            //    this.Name = name;
-            //    this.Sex = sexVar;
-            //}
             public DateTime Birthday { get; set; }
             public string Name { get; set; }
             public Sex Sex { get; set; }
@@ -94,7 +114,7 @@ namespace TestTask
             {
                 Console.WriteLine($"Животное {Name}, дата рождения {Birthday.ToString("dd.MM.yyyy")}, возраст {Age}");
             }
-            public void SayHellow()
+            public virtual void SayHellow()
             {
                 Console.WriteLine($"Hellow I am {Name}");
             }
@@ -103,5 +123,27 @@ namespace TestTask
                 return new Animal { Birthday = animal.Birthday.AddYears(1), Name = animal.Name, Sex = animal.Sex};
             }
         }
+        class Elephant : Animal
+        {
+            public override void SayHellow()
+            {
+                Console.WriteLine(String.Format("Hellow I am {0} {1}", this.GetType().Name, Name));
+            }
+        }
+        class Zebra : Animal
+        {
+            public override void SayHellow()
+            {
+                Console.WriteLine(String.Format("Hellow I am {0} {1}", this.GetType().Name, Name));
+            }
+        }
+        class Giraffe : Animal
+        {
+            public override void SayHellow()
+            {
+                Console.WriteLine(String.Format("Hellow I am {0} {1}", this.GetType().Name, Name));
+            }
+        }
+
     }
 }
